@@ -45,7 +45,7 @@ When building upon or reusing this work, please include:
 
 - **Author name**: Jasper Gomez  
 - **Repository name**: PERCEUL  
-- **Repository link**  
+- **Repository link**: https://github.com/jasper-gomez/perceul/tree/main
 - **Citation using the `CITATION.cff` metadata**  
 - A note in your documentation, publication, or code comments acknowledging the original work
 
