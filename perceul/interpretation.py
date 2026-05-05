@@ -9,12 +9,12 @@ def get_pca_loadings(pca: object, feature_names: list) -> pd.DataFrame:
     """
     Get loadings of PCA components.
 
-    Arguments: 
+    Args: 
         pca: PCA object from sklearn
         feature_names: List of feature names corresponding to the original data
     
     Returns:
-        DataFrame with PCA loadings for each component and feature
+        loadings: (pd.DataFrame) DataFrame with PCA loadings for each component and feature
     """
     loadings = pd.DataFrame(
         pca.components_.T,                                          # transposes the get features as rows and components as columns

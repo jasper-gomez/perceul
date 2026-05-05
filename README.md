@@ -10,6 +10,7 @@ PERCEUL aims to bridge ergonomics and AI, with the project using Unsupervised Le
 ---
 
 ## 📂 Contents
+```
 - artifacts
   - perceul-framework.png
   - concept-brief.md
@@ -21,6 +22,7 @@ PERCEUL aims to bridge ergonomics and AI, with the project using Unsupervised Le
 - README.md
 - LICENSE
 - CITATION.cff
+```
 
 --- 
 ## 📄 License
