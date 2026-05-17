@@ -2,6 +2,7 @@ import gradio as gr
 
 from perceul.numeric_selector import NumericSelector
 from perceul.clustering import explore_clusters, final_clustering
+from perceul.interpretation import get_pca_loadings
 
 #========== GRADIO INTERFACE ==========
 with gr.Blocks(title="PERCEUL: Perception-Based Worker Profiler") as app:
@@ -9,6 +10,12 @@ with gr.Blocks(title="PERCEUL: Perception-Based Worker Profiler") as app:
     gr.Markdown("# 🧠 PERCEUL: Profiler of Perception and Cognitive Ergonomics in the Workplace")
 
     file_input = gr.File(label="Upload CSV")
+
+    # invisible states to hold PCA model and feature names =======
+    pca_state = gr.State()
+    feature_names_state = gr.State()
+    # ============================================================
+
     with gr.Tab("Cluster Exploration"):
         
         btn = gr.Button("Explore Clusters")
@@ -18,6 +25,7 @@ with gr.Blocks(title="PERCEUL: Perception-Based Worker Profiler") as app:
         outlier_output = gr.Markdown("### Exploration Report")
     
     with gr.Tab("Final Clustering"):
+
         top_features = gr.Number(
             value=5, 
             label="Number of Features to Display", 
@@ -31,21 +39,28 @@ with gr.Blocks(title="PERCEUL: Perception-Based Worker Profiler") as app:
         best_k_out = gr.Number(label="Number of Clusters `K` (Read-Only)", interactive=False, precision=0)
         gr.Markdown("### Cluster Characteristics")
         deviations_out = gr.Markdown()
+        loadings_out = gr.Dataframe(label="PCA Loadings")
+
     
     # ==========================================================
     #                   BUTTON CALLBACKS
     # ==========================================================
-    
-    run_btn.click(
-        final_clustering,
-        inputs=[file_input, top_features],
-        outputs=[best_k_out, deviations_out]
-    )
 
     btn.click(
-            fn=explore_clusters,
-            inputs=[file_input],
-            outputs=[plot_output, cluster_summary_output, outlier_output]
+        fn=explore_clusters,
+        inputs=[file_input],
+        outputs=[plot_output, cluster_summary_output, outlier_output]
         )
+    
+    run_btn.click(
+        fn=final_clustering,
+        inputs=[file_input, top_features],
+        outputs=[best_k_out, deviations_out, pca_state, feature_names_state]
+    ).then(
+        fn=get_pca_loadings,
+        inputs=[pca_state, feature_names_state],
+        outputs=[loadings_out]
+    )
 
-app.launch()
+if __name__ == "__main__":
+    app.launch(share=False, debug=True)

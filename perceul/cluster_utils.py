@@ -34,13 +34,35 @@ def choose_k(X_pca):
 
 #========== During Cluster Analysis ========== 
 def compute_cluster_centroids_pca(df_pca: pd.DataFrame, labels: list) -> pd.DataFrame:
+    """
+    Compute cluster centroids in PCA space.
+
+    Args:
+        df_pca (pd.DataFrame): DataFrame with PCA-transformed data.
+        labels (list): List of cluster labels for each data point.
+
+    Returns:
+        pd.DataFrame: DataFrame with cluster centroids.
+    """
     df = pd.DataFrame(df_pca)
     df['cluster'] = labels
 
     return df.groupby('cluster').mean()
 
 # maps PCA-space centroids back to original feature space
-def inverse_project_centroids(pca_centroids, pca_model, scaler_model, original_feature_names):
+def inverse_project_centroids(pca_centroids, pca_model, scaler_model, original_feature_names) -> pd.DataFrame:
+    """
+    Inverse project PCA-space centroids back to original feature space.
+
+    Args:
+        pca_centroids (pd.DataFrame): DataFrame with PCA-space centroids.
+        pca_model (sklearn.decomposition.PCA): Fitted PCA model.
+        scaler_model (sklearn.preprocessing.StandardScaler): Fitted scaler model.
+        original_feature_names (list): List of original feature names.
+
+    Returns:
+        pd.DataFrame: DataFrame with centroids in original feature space.
+    """
 
     scaled_centroids = pca_model.inverse_transform(pca_centroids.values) # back-project from PCA space to scaled feature space
     original_space_centroids = scaler_model.inverse_transform(scaled_centroids) # undo scaling

@@ -51,6 +51,15 @@ def format_outliers(n_outliers):
     
 
 def format_deviations_as_columns(drivers: dict) -> str:
+    """
+    Format the top feature deviations for each cluster into a markdown table with clusters as columns.
+
+    Args:
+        drivers (dict): A dictionary where keys are cluster IDs and values are dictionaries containing feature deviations.
+
+    Returns:
+        str: A markdown table with clusters as columns and feature deviations as rows.
+    """
     headers = []
     cells = []
 

@@ -4,9 +4,9 @@ import matplotlib.pyplot as plt
 import joblib 
 import traceback 
 
-from cluster_utils import *
-from interpretation import get_pca_loadings
-from auxiliary import choose_umap_params, build_umap, build_hdbscan, format_outliers, format_deviations_as_columns
+from .cluster_utils import *
+from .interpretation import get_pca_loadings
+from .auxiliary import choose_umap_params, build_umap, build_hdbscan, format_outliers, format_deviations_as_columns
 
 from umap import UMAP
 from sklearn.cluster import KMeans 
@@ -71,10 +71,16 @@ def final_clustering(file: str, top_features: int) -> tuple:
     """
     Clusters data points using PCA + KMeans, identifies top drivers for each cluster.
 
+    Args:
+        file (str): Path to the input CSV file containing worker data.
+        top_features (int): Number of top features to identify as drivers for each cluster.
+
     Returns:
         A tuple containing:
-        * **best_k (int)**: optimal number of clusters determined by silhouette score.
-        * **deviations_markdown (str)**: markdown-formatted string showing top feature deviations for each cluster.
+        * best_k (int): optimal number of clusters determined by silhouette score.
+        * deviations_markdown (str): markdown-formatted string showing top feature deviations for each cluster.
+        * pca (sklearn.decomposition.PCA): The fitted PCA model.
+        * feature_names (list): List of feature names corresponding to the original data.
     """
     df = pd.read_csv(file)
     core_pipeline = joblib.load("artifacts/pipelines/core_pipeline.pkl")
@@ -106,4 +112,4 @@ def final_clustering(file: str, top_features: int) -> tuple:
     top_drivers = identify_top_drivers(original_centroids, top_features)    # returns a dict 
     deviations_markdown = format_deviations_as_columns(top_drivers)         # formats the output as a markdown table string
 
-    return best_k, deviations_markdown
+    return best_k, deviations_markdown, pca, feature_names
