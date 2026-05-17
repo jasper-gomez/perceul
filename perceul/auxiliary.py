@@ -64,7 +64,7 @@ def format_deviations_as_columns(drivers: dict) -> str:
     cells = []
 
     for cid, data in drivers.items():
-        headers.append(f"Cluster {cid + 1}")
+        headers.append(f"Cluster {cid}")
 
         dev_lines = [
             f"{feature}: {value:.3f}"

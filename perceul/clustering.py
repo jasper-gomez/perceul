@@ -77,6 +77,7 @@ def final_clustering(file: str, top_features: int) -> tuple:
 
     Returns:
         A tuple containing:
+        * fig (matplotlib.figure.Figure): The PCA scatter plot figure with clusters colored.
         * best_k (int): optimal number of clusters determined by silhouette score.
         * deviations_markdown (str): markdown-formatted string showing top feature deviations for each cluster.
         * pca (sklearn.decomposition.PCA): The fitted PCA model.
@@ -97,6 +98,25 @@ def final_clustering(file: str, top_features: int) -> tuple:
     labels = kmeans.fit_predict(X_pca)
 
     # ===================================================
+    #               Plotting PCA Clusters
+    # ===================================================
+
+    fig, ax = plt.subplots(figsize=(7, 5))
+    scatter = ax.scatter(
+        X_pca[:, 0],
+        X_pca[:, 1],
+        c=labels,
+        s=5,
+        alpha=0.8
+    )
+    ax.set_title("Final Clustering of Worker Profiles (PCA Space)")
+    ax.set_xlabel("PC1")
+    ax.set_ylabel("PC2")
+    legend1 = ax.legend(*scatter.legend_elements(), title="Clusters")
+    ax.add_artist(legend1)
+    fig.tight_layout()
+
+    # ===================================================
     #               Cluster Analysis
     # ===================================================
     pca = core_pipeline.named_steps["pca"]                                  # Named Step Access to PCA model
@@ -112,4 +132,4 @@ def final_clustering(file: str, top_features: int) -> tuple:
     top_drivers = identify_top_drivers(original_centroids, top_features)    # returns a dict 
     deviations_markdown = format_deviations_as_columns(top_drivers)         # formats the output as a markdown table string
 
-    return best_k, deviations_markdown, pca, feature_names
+    return fig, best_k, deviations_markdown, pca, feature_names

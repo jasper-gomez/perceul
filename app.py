@@ -38,8 +38,15 @@ with gr.Blocks(title="PERCEUL: Perception-Based Worker Profiler") as app:
         run_btn = gr.Button("Run Final Clustering")
         best_k_out = gr.Number(label="Number of Clusters `K` (Read-Only)", interactive=False, precision=0)
         gr.Markdown("### Cluster Characteristics")
-        deviations_out = gr.Markdown()
-        loadings_out = gr.Dataframe(label="PCA Loadings")
+
+        with gr.Row():
+            with gr.Column(scale=2):
+                pca_plot_out = gr.Plot()
+            with gr.Column(scale=3):
+                deviations_out = gr.Markdown()
+            
+        with gr.Row():
+            loadings_out = gr.Dataframe(label="PCA Loadings")   
 
     
     # ==========================================================
@@ -55,7 +62,7 @@ with gr.Blocks(title="PERCEUL: Perception-Based Worker Profiler") as app:
     run_btn.click(
         fn=final_clustering,
         inputs=[file_input, top_features],
-        outputs=[best_k_out, deviations_out, pca_state, feature_names_state]
+        outputs=[pca_plot_out, best_k_out, deviations_out, pca_state, feature_names_state]
     ).then(
         fn=get_pca_loadings,
         inputs=[pca_state, feature_names_state],
